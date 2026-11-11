@@ -41,25 +41,18 @@ def normalize(words):
 @st.cache_data(show_spinner="Preparing movie catalog…")
 def load_movies():
     movies_path = DATA / "tmdb_5000_movies.csv"
-    credits_path = DATA / "tmdb_5000_credits.csv"
-    if not movies_path.exists() or not credits_path.exists():
+    if not movies_path.exists():
         return None
     movies = pd.read_csv(movies_path)
-    credits = pd.read_csv(credits_path)
     required_m = {"id", "title", "overview", "genres", "keywords", "vote_average", "release_date"}
-    required_c = {"movie_id", "cast", "crew"}
-    if not required_m.issubset(movies.columns) or not required_c.issubset(credits.columns):
+    if not required_m.issubset(movies.columns):
         raise ValueError("CSV files are missing required TMDB columns.")
-    movies = movies.merge(credits[["movie_id", "cast", "crew"]], left_on="id", right_on="movie_id", how="inner")
     movies = movies.drop_duplicates("id").dropna(subset=["title", "overview"]).reset_index(drop=True)
     movies["genres_list"] = movies["genres"].apply(parse_names)
-    movies["cast_list"] = movies["cast"].apply(lambda x: parse_names(x, 3))
-    movies["director_list"] = movies["crew"].apply(director)
     movies["keywords_list"] = movies["keywords"].apply(parse_names)
     movies["tags"] = movies.apply(lambda r: " ".join(
         str(r["overview"]).lower().split() + normalize(r["genres_list"]) * 2 +
-        normalize(r["keywords_list"]) + normalize(r["cast_list"]) * 2 +
-        normalize(r["director_list"]) * 3), axis=1)
+        normalize(r["keywords_list"]) * 2), axis=1)
     return movies
 
 @st.cache_resource(show_spinner="Building recommendation engine…")
@@ -94,7 +87,7 @@ except Exception as exc:
     st.stop()
 if movies is None:
     st.warning("Movie data is not installed yet.")
-    st.markdown("Download the **TMDB 5000 Movie Dataset** from [Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata), and put BOTH `tmdb_5000_movies.csv` and `tmdb_5000_credits.csv` inside the `data/` folder. Commit those files to GitHub and redeploy.")
+    st.markdown("Download the **TMDB 5000 Movie Dataset** from [Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata), and put `tmdb_5000_movies.csv` inside the `data/` folder. Commit those files to GitHub and redeploy.")
     st.stop()
 
 vectors = build_engine(tuple(movies["tags"]))
