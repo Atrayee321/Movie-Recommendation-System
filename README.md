@@ -158,21 +158,6 @@ streamlit run app.py
 
 Streamlit will show the local address in your terminal (typically `http://localhost:8501`).
 
-## 🖼️ Enable Movie Posters (Optional)
-
-The application can retrieve movie poster images from **The Movie Database (TMDB)**.
-
-1. Create an account at [TMDB](https://www.themoviedb.org/).
-2. Request an API key under [TMDB API Settings](https://www.themoviedb.org/settings/api).
-3. For local use, create `.streamlit/secrets.toml`:
-
-```toml
-TMDB_API_KEY = "your_actual_tmdb_v3_api_key"
-```
-
-For Streamlit Community Cloud, add the same line under **App settings → Secrets** and save.
-
-**Security:** Never commit `.streamlit/secrets.toml` or a real API key to GitHub. If an API key is missing, invalid, or the API is unavailable, the app may show **Poster unavailable**.
 
 ## ☁️ Deployment
 
