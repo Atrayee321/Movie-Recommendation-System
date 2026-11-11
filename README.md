@@ -206,7 +206,6 @@ The project is designed for **Streamlit Community Cloud**.
 
 - [TMDB 5000 Movie Metadata](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata) — movie metadata.
 - [The Movie Database (TMDB)](https://www.themoviedb.org/) — movie information and optional poster API.
-- [CampusX Movie Recommender](https://github.com/campusx-official/movie-recommender-system-tmdb-dataset) — project inspiration.
 - [Streamlit](https://streamlit.io/) and [scikit-learn](https://scikit-learn.org/) — core technologies.
 
 *This product uses the TMDB API but is not endorsed or certified by TMDB.*
